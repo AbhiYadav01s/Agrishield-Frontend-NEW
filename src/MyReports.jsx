@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export default function MyReports({ onBack }) {
   // State to manage which field card is expanded for the "Deep Dive"
