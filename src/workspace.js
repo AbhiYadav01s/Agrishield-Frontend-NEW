@@ -1,0 +1,22 @@
+import { useRef, useState } from 'react';
+export const portals = {
+ farmer: { name: 'Farmer', user: 'Ramesh Kumar', initials: 'RK', icon: 'sprout', description: 'Know your fields. Care for your crops.', nav: [{ id: 'scan', label: 'Crop scanner', mr: 'पीक स्कॅन', icon: 'scan' }, { id: 'risk', label: 'Risk & weather', mr: 'धोका आणि हवामान', icon: 'cloud' }, { id: 'fields', label: 'My fields & reports', mr: 'शेती आणि अहवाल', icon: 'fields' }, { id: 'hub', label: 'Krishi Mitra', mr: 'कृषी मित्र', icon: 'chat' }] },
+ worker: { name: 'Field officer', user: 'Extension Officer', initials: 'EO', icon: 'clipboard', description: 'Support farmers. Protect your region.', nav: [{ id: 'map', label: 'Gram Manchitra', mr: 'ग्राम मानचित्र', icon: 'map' }, { id: 'reviews', label: 'Field review desk', mr: 'क्षेत्र पुनरावलोकन', icon: 'clipboard' }, { id: 'directory', label: 'Kisan Sampark', mr: 'किसान संपर्क', icon: 'users' }, { id: 'welfare', label: 'Yojana status', mr: 'योजना स्थिती', icon: 'building' }] },
+ expert: { name: 'Agronomist', user: 'District Agronomist', initials: 'DA', icon: 'shield', description: 'Review insights. Guide better decisions.', nav: [{ id: 'anomaly', label: 'Anomaly review', mr: 'विसंगती पुनरावलोकन', icon: 'scan' }, { id: 'retraining', label: 'AI retraining', mr: 'AI प्रशिक्षण', icon: 'brain' }, { id: 'outbreak', label: 'District outbreak map', mr: 'जिल्हा प्रादुर्भाव नकाशा', icon: 'map' }, { id: 'relief', label: 'Relief authorization', mr: 'मदत अधिकृतता', icon: 'building' }] },
+};
+export const seed = { version: 1,
+ fields: [{ id: 'field-1', name: 'North field', crop: 'Soybean', area: 2.4, stage: 'Flowering', day: 42, risk: 'High', health: 72 }, { id: 'field-2', name: 'Riverside plot', crop: 'Cotton', area: 1.8, stage: 'Boll formation', day: 75, risk: 'Moderate', health: 86 }, { id: 'field-3', name: 'East meadow', crop: 'Wheat', area: 2.0, stage: 'Vegetative', day: 28, risk: 'Low', health: 94 }],
+ cases: [{ id: 'AG-2041', farmer: 'Ramesh Kumar', crop: 'Cotton', field: 'Riverside plot', issue: 'Leaf discoloration — sample case', confidence: 74, status: 'pending', date: 'Sample record' }, { id: 'AG-2042', farmer: 'Anita Patil', crop: 'Soybean', field: 'Shirpur North', issue: 'Leaf spotting — sample case', confidence: 68, status: 'escalated', date: 'Sample record' }, { id: 'AG-2043', farmer: 'Suresh Jadhav', crop: 'Wheat', field: 'East meadow', issue: 'Routine field check', confidence: 91, status: 'verified', date: 'Sample record' }],
+ chats: [{ id: 'welcome', type: 'assistant', text: 'Welcome to Krishi Mitra. I can help you navigate this demonstration, prepare a field observation, or request a local expert review. What would you like to do?' }], broadcasts: [], protocols: [], runs: [], claims: [], requests: [],
+};
+export function useWorkspace() {
+ const [data, setData] = useState(() => { try { const saved = JSON.parse(localStorage.getItem('agri-workspace-v1')); if (saved?.version === 1 && Object.keys(seed).every(key => key === 'version' || Array.isArray(saved[key]))) return saved; } catch { /* Corrupt storage falls back to sample data. */ } return structuredClone(seed); });
+ const [storageError, setStorageError] = useState(false);
+ const current = useRef(data);
+ const update = (key, value) => { const previous = current.current, next = { ...previous, [key]: typeof value === 'function' ? value(previous[key]) : value }; current.current = next; setData(next); try { localStorage.setItem('agri-workspace-v1', JSON.stringify(next)); setStorageError(false); } catch { setStorageError(true); } };
+ return { data, update, storageError };
+}
+export function uid(prefix) { return `${prefix}-${crypto.randomUUID().slice(0, 8)}`; }
+export function timestamp() { return new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }); }
+export function download(name, value) { const url = URL.createObjectURL(new Blob([JSON.stringify(value, null, 2)], { type: 'application/json' })); const link = document.createElement('a'); link.href = url; link.download = name; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); }
+export async function api(path, options = {}) { const response = await fetch(`/api${path}`, { ...options, signal: options.signal || AbortSignal.timeout(10000) }); if (!response.ok) { const error = await response.json().catch(() => ({})); throw new Error(error.error || `Service returned ${response.status}`); } return response.json(); }
