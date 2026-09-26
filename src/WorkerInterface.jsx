@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import GramManchitra from './GramManchitra';
 import FieldReviewDesk from './FieldReviewDesk';
 import KisanSampark from './KisanSampark';
 import YojanaStatus from './YojanaStatus';
 
-export default function WorkerInterface({ onLogout }) {
+export default function WorkerInterface() {
   const [currentView, setCurrentView] = useState('dashboard');
   const [isReadingAloud, setIsReadingAloud] = useState(false);
 
