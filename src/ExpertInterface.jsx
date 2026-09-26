@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import AnomalyCommandCenter from './AnomalyCommandCenter';
 import AIRetrainingStudio from './AIRetrainingStudio';
 import DistrictOutbreakMap from './DistrictOutbreakMap';
 import DisasterReliefAuth from './DisasterReliefAuth';
 
-export default function ExpertInterface({ onLogout }) {
+export default function ExpertInterface() {
   const [currentView, setCurrentView] = useState('dashboard');
   const [isReadingAloud, setIsReadingAloud] = useState(false);
 
