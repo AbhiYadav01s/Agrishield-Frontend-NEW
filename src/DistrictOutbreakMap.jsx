@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { MapContainer, TileLayer, Circle, Popup } from 'react-leaflet';
 
 export default function DistrictOutbreakMap({ onBack }) {
