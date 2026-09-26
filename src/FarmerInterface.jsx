@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import ScanCrop from './ScanCrop';
 import CheckRisk from './CheckRisk';
 import MyReports from './MyReports';
 import ChatFAQ from './ChatFAQ';
 
-export default function FarmerInterface({ onLogout }) {
+export default function FarmerInterface() {
   const [isMarathi, setIsMarathi] = useState(false);
   const [isReadingAloud, setIsReadingAloud] = useState(false);
   const [isFaqOpen, setIsFaqOpen] = useState(false);
