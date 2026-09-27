@@ -1,3 +1,4 @@
+import { useFarmerText } from './farmerLanguage';
 import { useEffect, useRef } from 'react';
 const paths = {
   leaf: <><path d="M20 4c-8-2-16 2-15 9 1 6 8 7 12 2 3-4 3-8 3-11Z"/><path d="M4 21 15 10"/></>,
@@ -30,12 +31,13 @@ export function Button({ children, icon, variant = 'primary', className = '', ..
 export function PageHeading({ eyebrow, title, description, children }) { return <div className="page-heading"><div><div className="eyebrow">{eyebrow || 'YOUR CONNECTED WORKSPACE'}</div><h1>{title}</h1>{description && <p>{description}</p>}</div>{children && <div className="heading-actions">{children}</div>}</div>; }
 export function Empty({ icon = 'fields', title, children }) { return <div className="empty-state"><span className="icon-box"><Icon name={icon} size={28} /></span><h3>{title}</h3><p>{children}</p></div>; }
 export function Modal({ title, children, onClose }) {
+  const t = useFarmerText();
   const ref = useRef(null), closeRef = useRef(onClose);
   useEffect(() => { closeRef.current = onClose; }, [onClose]);
   useEffect(() => { const previous = document.activeElement, bodyOverflow = document.body.style.overflow; document.body.style.overflow = 'hidden'; const el = ref.current; el.querySelector('input, textarea, select, button')?.focus();
     const key = event => { if (event.key === 'Escape') closeRef.current(); if (event.key !== 'Tab') return; const all = [...el.querySelectorAll('button:not(:disabled), input, select, textarea, a[href]')], first = all[0], last = all.at(-1); if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); } else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); } };
     document.addEventListener('keydown', key); return () => { document.body.style.overflow = bodyOverflow; document.removeEventListener('keydown', key); previous?.focus(); };
   }, []);
-  return <div className="modal-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) onClose(); }}><section className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" ref={ref}><header><h2 id="modal-title">{title}</h2><button className="icon-button" aria-label="Close dialog" onClick={onClose}><Icon name="close" /></button></header>{children}</section></div>;
+  return <div className="modal-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) onClose(); }}><section className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" ref={ref}><header><h2 id="modal-title">{title}</h2><button className="icon-button" aria-label={t("Close dialog")} onClick={onClose}><Icon name="close" /></button></header>{children}</section></div>;
 }
 export function FieldArt({ compact = false }) { return <svg className={`field-art ${compact ? 'compact' : ''}`} viewBox="0 0 600 310" fill="none" aria-hidden="true"><rect width="600" height="310" rx="18" fill="#dce5cc"/><circle cx="450" cy="74" r="36" fill="#f5edc4"/><path d="M0 174c90-85 182-60 273-24 132-98 237-62 327-27v187H0Z" fill="#9aaf7d"/><path d="M0 217c210-119 400-5 600-47v140H0Z" fill="#567551"/><path d="M0 268c211-128 356-52 600-35v77H0Z" fill="#365a43"/><path d="M-10 320c120-100 254-116 494-84M72 325c160-98 288-89 487-71M190 325c122-67 276-64 426-51M348 325c87-35 175-35 267-29" stroke="#a6bd7f" strokeWidth="12"/><path d="M0 226c166-86 300-14 420-26" stroke="#e9dca3" strokeWidth="12"/><path d="M62 149v53m-15-37 15 14 17-21m-31-6 14 10 15-17M98 123v64m-14-39 14 11 17-18m-26-13 9 17 14-22" stroke="#2c4d38" strokeWidth="5"/><rect x="371" y="127" width="57" height="40" rx="3" fill="#efead8"/><path d="m363 130 36-31 38 31" fill="#b87954"/><rect x="393" y="146" width="13" height="21" fill="#6a7754"/><path d="M323 117v59m-15-28 15 10 19-21" stroke="#365a43" strokeWidth="5"/><circle cx="322" cy="119" r="21" fill="#71894e"/></svg>; }

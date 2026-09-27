@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Icon, Brand, FieldArt, Badge, Button, Modal } from './ui';
 import { portals, useWorkspace } from './workspace';
+import FarmerPortal from './FarmerPortal';
 import { Dashboard, Scan, Risk, Fields, Hub, MapView, Reviews, Directory, Welfare, Anomaly, Retraining, Relief } from './screens';
 
 function initialRole() { try { return sessionStorage.getItem('agri-role') || ''; } catch { return ''; } }
@@ -32,6 +33,7 @@ export default function MainApp() {
     <section className="welcome-access"><div className="eyebrow">YOUR WORK STARTS HERE</div><h2>Choose your workspace</h2><p className="muted">The right tools, for your role in the field.</p><div className="portal-list">{Object.entries(portals).map(([id, item]) => <button key={id} className="portal-choice" onClick={() => { setLogin(id); setError(''); }}><span className={`icon-box ${id}`}><Icon name={item.icon} /></span><span><strong>{item.name}</strong><small>{item.description}</small></span><Icon name="arrow" /></button>)}</div><div className="demo-notice"><Icon name="info" /><p><strong>Explore the demonstration</strong><br />Sample farm data and local workflows. No real alerts, diagnoses, or payments are issued.</p></div><div className="access-footer"><Icon name="leaf" /> Built for better growing decisions.</div></section>
     </main><footer className="welcome-footer"><span>Agri-Vyakaroti · Cultivating confidence</span><span>Jalgaon, Maharashtra</span></footer>
     {login && <Modal title={`${portals[login].name} access`} onClose={() => setLogin('')}><p className="muted">Sign in to the demonstration workspace.</p><form onSubmit={enter} className="form-stack"><label htmlFor="username">Username<input id="username" name="username" autoComplete="username" defaultValue={login} required /></label><label htmlFor="password">Password<input id="password" name="password" type="password" autoComplete="current-password" required /></label>{error && <p className="form-error" role="alert">{error}</p>}<div className="hint">Demo credentials: <strong>{login}</strong> / <strong>123</strong></div><Button type="submit" icon="arrow">Enter workspace</Button></form></Modal>}</div>;
+  if (role === 'farmer') return <FarmerPortal page={page} language={language} setLanguage={setLanguage} navigate={navigate} logout={logout} data={data} update={update} storageError={storageError} />;
   const allowed = ['overview', ...portal.nav.map(n => n.id)], activePage = allowed.includes(page) ? page : 'overview';
   const navItems = [{ id: 'overview', label: 'Overview', mr: 'आढावा', icon: 'grid' }, ...portal.nav], current = navItems.find(n => n.id === activePage);
   const props = { data, update, notify, navigate, role };
